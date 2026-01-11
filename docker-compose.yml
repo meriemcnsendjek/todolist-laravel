@@ -14,4 +14,4 @@ services:
       MYSQL_DATABASE: todolist_db
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3307:3306"

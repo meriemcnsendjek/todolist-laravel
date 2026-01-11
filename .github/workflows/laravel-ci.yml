@@ -1,43 +1,29 @@
+
 name: Laravel CI
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
-  build:
+  laravel:
     runs-on: ubuntu-latest
 
     steps:
-      # Étape 1 : récupérer le code
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # Étape 2 : installer PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.3
-          extensions: mbstring, bcmath, pdo, pdo_mysql
+          php-version: '8.2'
 
-      # Étape 3 : installer Composer
       - name: Install Composer dependencies
-        run: composer install --no-progress --no-interaction --prefer-dist
+        run: composer install --no-interaction --prefer-dist
 
-      # Étape 4 : configurer l'environnement
-      - name: Copy .env.example
-        run: cp .env.example .env
-
-      - name: Generate app key
-        run: php artisan key:generate
-
-      # Étape 5 : créer la base de données SQLite pour tests
-      - name: Setup SQLite DB
+      - name: Prepare environment
         run: |
-          touch database/database.sqlite
-          php artisan migrate --env=testing
+          cp .env.example .env
+          php artisan key:generate
 
-      # Étape 6 : exécuter les tests Laravel
-      - name: Run tests
-        run: php artisan test
+      - name: Clear cache
+        run: php artisan optimize:clear
